@@ -4,10 +4,11 @@ import base.DriverFactory;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.slf4j.Logger;
 import utils.ConfigReader;
 import utils.Log;
-import utils.ScreenshotUtil;
 
 import java.io.IOException;
 
@@ -24,8 +25,10 @@ public class Hooks
 
     @After
     public void tearDown(Scenario scenario) {
-        if (scenario.isFailed()) {
-            byte[] screenshot = ScreenshotUtil.takeScreenshot(scenario.getName());
+        if (scenario.isFailed())
+        {
+            TakesScreenshot ts = (TakesScreenshot) DriverFactory.getDriver();
+            byte[] screenshot = ts.getScreenshotAs(OutputType.BYTES);
             scenario.attach(screenshot, "image/png", scenario.getName());
         }
         logger.info("===Quiting WebDriver====");
